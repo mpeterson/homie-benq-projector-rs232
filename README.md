@@ -1,6 +1,8 @@
 Homie Benq Projector RS232 Controller
 =====================================
-[![Build Status](https://img.shields.io/travis/mpeterson/homie-benq-projector-rs232.svg)](https://travis-ci.org/mpeterson/homie-benq-projector-rs232) [![License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](https://github.com/mpeterson/homie-benq-projector-rs232/blob/master/LICENSE)
+[![Build Status](https://img.shields.io/travis/mpeterson/homie-benq-projector-rs232.svg)](https://travis-ci.org/mpeterson/homie-benq-projector-rs232)
+[![License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](https://github.com/mpeterson/homie-benq-projector-rs232/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/mpeterson/homie-benq-projector-rs232/all.svg)](https://github.com/mpeterson/homie-benq-projector-rs232/releases)
 
 BenQ Projector MQTT <-> RS232 controller based on the [Homie MQTT convention](https://github.com/marvinroger/homie).
 

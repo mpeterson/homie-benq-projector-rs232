@@ -29,6 +29,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 void sendCommand(const String& command, const String& value);
 
+bool toggleHandler(const String& value, const String& cmd_key, const String& opt_1, const String& opt_2, const String& node_property);
+
 bool powerHandler(const HomieRange& range, const String& value);
 
 #endif  // INCLUDE_MAIN_HPP_

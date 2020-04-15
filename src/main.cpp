@@ -30,15 +30,20 @@ void sendCommand(const String& command, const String& value) {
     Serial.print(SERIAL_TRAIL);
 }
 
-bool powerHandler(const HomieRange& range, const String& value) {
-    if (value != "on" && value != "off") {
+bool toggleHandler(const String& value, const String& cmd_key, const String& opt_1, const String& opt_2, const String& node_property)
+{
+    if (value != opt_1 && value != opt_2) {
         return false;
     }
 
-    sendCommand("pow", value);
-    projectorNode.setProperty("power").send(value);
+    sendCommand(cmd_key, value);
+    projectorNode.setProperty(node_property).send(value);
 
     return true;
+}
+
+bool powerHandler(const HomieRange& range, const String& value) {
+    return toggleHandler(value, "pow", "on", "off", "power");
 }
 
 void setup() {

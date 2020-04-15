@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define INCLUDE_MAIN_HPP_
 
 #define FW_NAME      "homie-benq-projector-rs232"
-#define FW_VERSION   "0.1.1"
+#define FW_VERSION   "0.2.1"
 
 #define SERIAL_BAUD  115200
 #define SERIAL_HEAD  "\r*"

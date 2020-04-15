@@ -44,7 +44,7 @@ bool toggleHandler(const String& value, const String& cmd_key, const String& opt
 
 
 bool sourceHandler(const HomieRange& range, const String& value) {
-    return toggleHandler(value, "sour", "hdmi1", "hdmi2", "source");
+    return toggleHandler(value, "sour", "hdmi", "hdmi2", "source");
 }
 
 bool volumeHandler(const HomieRange& range, const String& value){

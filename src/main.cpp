@@ -56,6 +56,9 @@ bool powerHandler(const HomieRange& range, const String& value) {
     return toggleHandler(value, "pow", "on", "off", "power");
 }
 
+bool muteHandler(const HomieRange& range, const String& value) {
+    return toggleHandler(value, "mute", "on", "off", "mute");
+}
 void setup() {
     Homie.disableLogging();
     Serial.begin(SERIAL_BAUD);
@@ -67,6 +70,9 @@ void setup() {
     projectorNode.advertise("power").settable(powerHandler);
     projectorNode.advertise("source").settable(sourceHandler);
     projectorNode.advertise("volume").settable(volumeHandler);
+    projectorNode.advertise("mute").settable(muteHandler);
+    // projectorNode.advertise("volumelvl");
+
 }
 
 void loop() {

@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define INCLUDE_MAIN_HPP_
 
 #define FW_NAME      "homie-benq-projector-rs232"
-#define FW_VERSION   "0.1.0"
+#define FW_VERSION   "0.3.1"
 
 #define SERIAL_BAUD  115200
 #define SERIAL_HEAD  "\r*"
@@ -29,6 +29,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 void sendCommand(const String& command, const String& value);
 
+bool toggleHandler(const String& value, const String& cmd_key, const String& opt_1, const String& opt_2, const String& node_property);
+
+bool volumeHandler(const HomieRange& range, const String& value);
+
+bool sourceHandler(const HomieRange& range, const String& value);
+
 bool powerHandler(const HomieRange& range, const String& value);
+
+bool muteHandler(const HomieRange& range, const String& value);
+
 
 #endif  // INCLUDE_MAIN_HPP_

@@ -30,17 +30,35 @@ void sendCommand(const String& command, const String& value) {
     Serial.print(SERIAL_TRAIL);
 }
 
-bool powerHandler(const HomieRange& range, const String& value) {
-    if (value != "on" && value != "off") {
+bool toggleHandler(const String& value, const String& cmd_key, const String& opt_1, const String& opt_2, const String& node_property)
+{
+    if (value != opt_1 && value != opt_2) {
         return false;
     }
 
-    sendCommand("pow", value);
-    projectorNode.setProperty("power").send(value);
+    sendCommand(cmd_key, value);
+    projectorNode.setProperty(node_property).send(value);
 
     return true;
 }
 
+
+bool sourceHandler(const HomieRange& range, const String& value) {
+    return toggleHandler(value, "sour", "hdmi", "hdmi2", "source");
+}
+
+bool volumeHandler(const HomieRange& range, const String& value){
+    // TODO: note that property volume can be also read with <CR>*vol=?#<CR> and thus publish the actual volume value instead of +/-
+    return toggleHandler(value, "vol", "+", "-", "volume");
+}
+
+bool powerHandler(const HomieRange& range, const String& value) {
+    return toggleHandler(value, "pow", "on", "off", "power");
+}
+
+bool muteHandler(const HomieRange& range, const String& value) {
+    return toggleHandler(value, "mute", "on", "off", "mute");
+}
 void setup() {
     Homie.disableLogging();
     Serial.begin(SERIAL_BAUD);
@@ -50,6 +68,11 @@ void setup() {
     Homie.setup();
 
     projectorNode.advertise("power").settable(powerHandler);
+    projectorNode.advertise("source").settable(sourceHandler);
+    projectorNode.advertise("volume").settable(volumeHandler);
+    projectorNode.advertise("mute").settable(muteHandler);
+    // projectorNode.advertise("volumelvl");
+
 }
 
 void loop() {

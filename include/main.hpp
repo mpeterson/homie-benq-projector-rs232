@@ -18,26 +18,33 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef INCLUDE_MAIN_HPP_
 #define INCLUDE_MAIN_HPP_
 
-#define FW_NAME      "homie-benq-projector-rs232"
-#define FW_VERSION   "0.3.1"
+#include <vector>
 
-#define SERIAL_BAUD  115200
-#define SERIAL_HEAD  "\r*"
-#define SERIAL_TOKEN "="
-#define SERIAL_TRAIL "#\r"
+#define FW_NAME "homie-benq-projector-rs232"
+#define FW_VERSION "0.4.1"
 
+#define MQTT_DEBUG "debug"
 
-void sendCommand(const String& command, const String& value);
+#define MQTT_POWER "power"
+#define MQTT_SOURCE "source"
+#define MQTT_VOLUME "volume"
+#define MQTT_MUTE "mute"
 
-bool toggleHandler(const String& value, const String& cmd_key, const String& opt_1, const String& opt_2, const String& node_property);
+bool setProperty(const String &property, const String &value, const String &serialCommand, std::vector<String> &validOptions);
 
-bool volumeHandler(const HomieRange& range, const String& value);
+bool setVolume(const HomieRange &range, const String &value);
 
-bool sourceHandler(const HomieRange& range, const String& value);
+void getSource(const String &value);
+bool setSource(const HomieRange &range, const String &value);
 
-bool powerHandler(const HomieRange& range, const String& value);
+void getPower(const String &value);
+bool setPower(const HomieRange &range, const String &value);
 
-bool muteHandler(const HomieRange& range, const String& value);
+void getMute(const String &value);
+bool setMute(const HomieRange &range, const String &value);
 
+bool setSerialRead(const HomieRange &range, const String &value);
 
-#endif  // INCLUDE_MAIN_HPP_
+void mqttLog(const String &value);
+
+#endif // INCLUDE_MAIN_HPP_

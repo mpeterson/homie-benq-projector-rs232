@@ -15,66 +15,124 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <vector>
+
 #include <Homie.h>
 
 #include "main.hpp"
-
+#include "SerialManager.hpp"
 
 HomieNode projectorNode("benq", "projector");
+SerialManager serialManager(Serial);
 
-void sendCommand(const String& command, const String& value) {
-    Serial.print(SERIAL_HEAD);
-    Serial.print(command);
-    Serial.print(SERIAL_TOKEN);
-    Serial.print(value);
-    Serial.print(SERIAL_TRAIL);
-}
-
-bool toggleHandler(const String& value, const String& cmd_key, const String& opt_1, const String& opt_2, const String& node_property)
+bool setProperty(const String &property, const String &value, const String &serialCommand, std::vector<String> &validOptions)
 {
-    if (value != opt_1 && value != opt_2) {
+    bool validated = false;
+    for (String s : validOptions)
+    {
+        if (s == value)
+        {
+            validated = true;
+            break;
+        }
+    }
+
+    if (!validated)
+    {
         return false;
     }
 
-    sendCommand(cmd_key, value);
-    projectorNode.setProperty(node_property).send(value);
+    mqttLog("Setting property=" + property + " value=" + value);
+    if (!serialManager.sendCommand(serialCommand, value))
+    {
+        return false;
+    }
+
+    
+    projectorNode.setProperty(property).send(value);
 
     return true;
 }
 
-
-bool sourceHandler(const HomieRange& range, const String& value) {
-    return toggleHandler(value, "sour", "hdmi", "hdmi2", "source");
+void getSource(const String &value)
+{
+    projectorNode.setProperty(MQTT_SOURCE).send(value);
 }
 
-bool volumeHandler(const HomieRange& range, const String& value){
-    // TODO: note that property volume can be also read with <CR>*vol=?#<CR> and thus publish the actual volume value instead of +/-
-    return toggleHandler(value, "vol", "+", "-", "volume");
+bool setSource(const HomieRange &range, const String &value)
+{
+    std::vector<String> validOptions{VALUE_HDMI1, VALUE_HDMI2};
+    return setProperty(MQTT_SOURCE, value, CMD_SOURCE, validOptions);
 }
 
-bool powerHandler(const HomieRange& range, const String& value) {
-    return toggleHandler(value, "pow", "on", "off", "power");
+bool setVolume(const HomieRange &range, const String &value)
+{
+    std::vector<String> validOptions{VALUE_VOL_UP, VALUE_VOL_DOWN};
+    return setProperty(MQTT_VOLUME, value, CMD_VOLUME, validOptions);
 }
 
-bool muteHandler(const HomieRange& range, const String& value) {
-    return toggleHandler(value, "mute", "on", "off", "mute");
+void getPower(const String &value)
+{
+    mqttLog("Getting property=power value=" + value);
+    projectorNode.setProperty(MQTT_POWER).send(value);
 }
-void setup() {
+
+bool setPower(const HomieRange &range, const String &value)
+{
+    std::vector<String> validOptions{VALUE_ON, VALUE_OFF};
+    return setProperty(MQTT_POWER, value, CMD_POWER, validOptions);
+}
+
+void getMute(const String &value)
+{
+    projectorNode.setProperty(MQTT_MUTE).send(value);
+}
+
+bool setMute(const HomieRange &range, const String &value)
+{
+    std::vector<String> validOptions{VALUE_ON, VALUE_OFF};
+    return setProperty(MQTT_MUTE, value, CMD_MUTE, validOptions);
+}
+
+bool setSerialRead(const HomieRange &range, const String &value)
+{
+    serialManager.sendCommand(value, "?");
+
+    return true;
+}
+
+void mqttLog(const String &value)
+{
+    projectorNode.setProperty(MQTT_DEBUG).send(value);
+}
+
+void setup()
+{
     Homie.disableLogging();
-    Serial.begin(SERIAL_BAUD);
-    Serial.swap();
 
     Homie_setFirmware(FW_NAME, FW_VERSION);
     Homie.setup();
 
-    projectorNode.advertise("power").settable(powerHandler);
-    projectorNode.advertise("source").settable(sourceHandler);
-    projectorNode.advertise("volume").settable(volumeHandler);
-    projectorNode.advertise("mute").settable(muteHandler);
-    // projectorNode.advertise("volumelvl");
+    projectorNode.advertise(MQTT_DEBUG);
+    projectorNode.setProperty(MQTT_DEBUG).setRetained(false);
+    projectorNode.advertise(MQTT_POWER).settable(setPower);
+    projectorNode.advertise(MQTT_SOURCE).settable(setSource);
+    projectorNode.advertise(MQTT_VOLUME).settable(setVolume);
+    projectorNode.advertise(MQTT_MUTE).settable(setMute);
 
+    serialManager.setLogger(mqttLog);
+
+    serialManager.setup();
+
+    serialManager.monitor(CMD_POWER, getPower);
+    serialManager.monitor(CMD_SOURCE, getSource);
+    serialManager.monitor(CMD_MUTE, getMute);
+    
+    mqttLog("Node initialization complete");
 }
 
-void loop() {
+void loop()
+{
     Homie.loop();
+    serialManager.loop();
 }

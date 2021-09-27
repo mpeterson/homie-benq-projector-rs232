@@ -8,7 +8,8 @@ BenQ Projector MQTT <-> RS232 controller based on the [Homie MQTT convention](ht
 
 This project is a [Homie for ESP8266 v2.0.0](https://github.com/marvinroger/homie-esp8266/releases/tag/v2.0.0) sketch implementing [Homie 2.0.1](https://github.com/marvinroger/homie/releases/tag/v2.0.1).
 
-Reference for commands [Command Control](https://business-display.benq.com/content/dam/bb/en/product/projector/corporate/lx770/quick-start-guide/lx770-rs232-control-guide-0-windows7-windows8-winxp.pdf)
+Reference for commands [Command Control](https://benqimage.blob.core.windows.net/driver-us-file/RS232-commands_all%20Product%20Lines.pdf)
+
 The goal of the project is to support a big array of commands and thus not need to rely on the IR remote control but it will grow organically as I find time to work on it.
 
 The project follows [Semantic Versioning](http://semver.org/). It's currently on development (ergo the v0.x.y) towards the first version and is thus unstable in nature. Once it reaches a maturity level that I feel comfortable, I will bump the version to v1.0.0 and continue from there. 
